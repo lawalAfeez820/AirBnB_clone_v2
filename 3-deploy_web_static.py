@@ -8,6 +8,8 @@ from fabric.api import env, local, put, run, runs_once
 
 
 env.hosts = ['52.86.70.165', '54.144.240.135']
+env.user = 'ubuntu'
+env.key_filename = '~/.ssh/id_rsa'
 
 
 @runs_once
@@ -26,7 +28,7 @@ def do_pack():
     )
     try:
         print("Packing web_static to {}".format(output))
-        local("tar -cvzf {} web_static".format(output))
+        local("tar -cvzf {} ../AirBnB_clone/web_static".format(output))
         archize_size = os.stat(output).st_size
         print("web_static packed: {} -> {} Bytes".format(output, archize_size))
     except Exception:
@@ -50,7 +52,7 @@ def do_deploy(archive_path):
         run("mkdir -p {}".format(folder_path))
         run("tar -xzf /tmp/{} -C {}".format(file_name, folder_path))
         run("rm -rf /tmp/{}".format(file_name))
-        run("mv {}web_static/* {}".format(folder_path, folder_path))
+        #run("mv {}web_static/* {}".format(folder_path, folder_path))
         run("rm -rf {}web_static".format(folder_path))
         run("rm -rf /data/web_static/current")
         run("ln -s {} /data/web_static/current".format(folder_path))
